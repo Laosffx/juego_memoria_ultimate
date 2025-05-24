@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Juego de Memoria</title>
   <style>
-  body {
+   body {
     font-family: sans-serif;
     background-color: #f9f9f9;
     text-align: center;
@@ -27,8 +27,6 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 15px;
-    justify-content: center;
-    align-items: center;
   }
 
   .card {
@@ -52,7 +50,6 @@
     height: 100%;
     object-fit: cover;
     display: none;
-    border-radius: 0;
   }
 
   .card.abierta img {
@@ -64,39 +61,28 @@
     font-weight: bold;
     color: green;
     font-size: 1.5rem;
-    text-align: center;
   }
 
-  /* 📱 Estilos para pantallas pequeñas (móvil) */
+  /* Pantallas pequeñas */
   @media (max-width: 480px) {
-  .grid {
-    gap: 5px;
-    max-width: 100vw; /* O incluso 100% si quieres que ocupe todo */
-  }
-}
-
-
-    .card {
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .grid {
+      gap: 5px;
     }
-
     #resultado {
       font-size: 1.2rem;
     }
   }
 
-  /* 💻 Estilos para pantallas grandes (ordenador) */
-@media (min-width: 768px) {
-  .grid {
-    gap: 20px;
-    max-width: 900px;
+  /* Pantallas grandes */
+  @media (min-width: 768px) {
+    .grid {
+      gap: 20px;
+      max-width: 800px;
+    }
+    #resultado {
+      font-size: 24px;
+    }
   }
-  #resultado {
-    font-size: 24px;
-  }
-}
-
-
 </style>
 
 
