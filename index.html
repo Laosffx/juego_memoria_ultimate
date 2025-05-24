@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Memoria</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 10px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-color: #eee;
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .card.abierta img {
+      display: block;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Juego de Memoria</h2>
+  <div id="tablero" class="grid"></div>
+  <p id="resultado"></p>
+
+  <script>
+    // Leer subgrupo desde la URL (ej: ?subgrupo=A1)
+    const urlParams = new URLSearchParams(window.location.search);
+    const subgrupo = urlParams.get("subgrupo") || "A1";  // Por defecto A1 si no se indica
+
+    const grupo = subgrupo.startsWith("A") ? "grupoA" : "grupoB";
+    const subgrupoNumero = parseInt(subgrupo.slice(1));  // 1, 2, 3
+
+    // Calcular imágenes a cargar (6 por subgrupo)
+    const inicio = (subgrupoNumero - 1) * 6 + 1;
+    const fin = inicio + 5;
+
+    const imagenes = [];
+    for (let i = inicio; i <= fin; i++) {
+      imagenes.push(`${grupo}/img${i}.jpg`);
+    }
+
+    const pares = [...imagenes, ...imagenes].sort(() => Math.random() - 0.5);
+
+    let seleccionadas = [];
+    let emparejadas = 0;
+    let intentos = 0;
+    let tiempoInicio = Date.now();
+
+    const tablero = document.getElementById("tablero");
+
+    pares.forEach((src) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      const img = document.createElement("img");
+      img.src = src;
+      div.appendChild(img);
+      div.onclick = () => manejarClick(div, src);
+      tablero.appendChild(div);
+    });
+
+    function manejarClick(card, src) {
+      if (card.classList.contains("abierta") || seleccionadas.length === 2) return;
+      card.classList.add("abierta");
+      seleccionadas.push({card, src});
+
+      if (seleccionadas.length === 2) {
+        intentos++;
+        const [a, b] = seleccionadas;
+        if (a.src === b.src) {
+          emparejadas++;
+          seleccionadas = [];
+          if (emparejadas === 6) {
+            const tiempoFinal = Date.now();
+            const tiempoTotal = ((tiempoFinal - tiempoInicio) / 1000).toFixed(3);
+
+            document.getElementById("resultado").textContent = `✅ Juego terminado.`;
+
+            // Enviar datos a Qualtrics
+            window.parent.postMessage({
+              tiempo: tiempoTotal,
+              intentos: intentos,
+              subgrupo: subgrupo
+            }, "*");
+          }
+        } else {
+          setTimeout(() => {
+            a.card.classList.remove("abierta");
+            b.card.classList.remove("abierta");
+            seleccionadas = [];
+          }, 1000);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
