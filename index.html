@@ -145,17 +145,20 @@
           emparejadas++;
           seleccionadas = [];
           if (emparejadas === 6) {
-            const tiempoFinal = Date.now();
-            const tiempoTotal = ((tiempoFinal - tiempoInicio) / 1000).toFixed(2);
+  const tiempoFinal = Date.now();
+  const tiempoTotal = ((tiempoFinal - tiempoInicio) / 1000).toFixed(2);
 
-            document.getElementById("resultado").textContent = `✅ Juego terminado.`;
+  document.getElementById("resultado").textContent = `✅ Juego terminado.`;
 
-            window.parent.postMessage({
-              tiempo: tiempoTotal,
-              intentos: intentos,
-              subgrupo: subgrupo
-            }, "*");
-          }
+  // ✅ Nuevo: Enviar datos y autoavanzar
+  window.parent.postMessage({
+    tiempo: tiempoTotal,
+    intentos: intentos,
+    subgrupo: subgrupo,
+    autoAvanzar: true  // Nuevo parámetro para controlar el avance
+  }, "*");
+}
+
         } else {
           setTimeout(() => {
             a.card.classList.remove("abierta");
