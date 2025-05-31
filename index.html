@@ -77,13 +77,11 @@
   }
 
   /* Pantallas grandes */
- @media (min-width: 768px) {
+@media (min-width: 768px) {
   .grid {
-    gap: 10px; /* Un poco menos de espacio */
-    max-width: 350px; /* Ajusta el tamaño */
-  }
-  #resultado {
-    font-size: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    max-width: 600px; /* o ajusta este tamaño si quieres */
   }
 }
 
